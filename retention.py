@@ -38,14 +38,13 @@ def splitdirnames(data):
 
 
 def getdirnames():
-    dir = []
-    for a, b, c in os.walk(dirs):
-        if len(b) != 0:
-            for d in b:
-                if re.search(r'20..-..-..', d):
-                    dir.append(splitdirnames(d))
-    dir.reverse()
-    return dir
+    final = []
+    for dir in os.listdir(dirs):
+        if re.search(r'^20..-..-..', dir):
+            final.append(splitdirnames(dir))
+    final.sort()
+    final.reverse()
+    return final
 
 
 def getkeepeddirnames(data):
