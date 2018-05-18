@@ -5,10 +5,10 @@ import re
 import datetime
 import shutil
 
-dirs = "/home/fos/Dokumente/Computer/python/pih_retention/testdir/"
+dirs = "/mnt/archive/"
 
 daysaweek = 3
-weekstokeep = 52
+weekstokeep = 104
 daystokeep = 60
 monthlytokeep = 12
 yearlytokeep = 10
@@ -149,10 +149,18 @@ def yearly(data):
 data = getdirnames()
 keep = getkeepeddirnames(data)
 remove = getremoveddirnames(keep, data)
-#removedirnames(remove)
+removedirnames(remove)
 
-print(keep)
-print(remove)
+# be verbose on bigger actions
+if len(remove) >= 3:
+    keep.reverse()
+    remove.reverse()
 
-print("Backups to keep %i" % (len(keep)))
-print("Backups to remove %i" % (len(remove)))
+    print("Backups to keep - %i" % (len(keep)))
+    for a in keep:
+        print(a)
+
+    print("")
+    print("Backups to remove - %i" % (len(remove)))
+    for b in remove:
+        print(b)
