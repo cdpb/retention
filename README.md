@@ -17,4 +17,4 @@ yearlytokeep = 10
 ### Limitations
 
 * only works with dir format `YYYY-MM-DD`
-  * can be easly change in `getdirnames()`
+  * can be easly changed in `getdirnames()`
