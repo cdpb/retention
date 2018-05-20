@@ -153,14 +153,10 @@ removedirnames(remove)
 
 # be verbose on bigger actions
 if len(remove) >= 3:
-    keep.reverse()
-    remove.reverse()
-
-    print("Backups to keep - %i" % (len(keep)))
-    for a in keep:
-        print(a)
-
-    print("")
-    print("Backups to remove - %i" % (len(remove)))
-    for b in remove:
-        print(b)
+    for a in ("keep", "remove"):
+        eval(a).reverse()
+        print("")
+        print("Backups to %s - %i" % (a, len(eval(a))))
+        print("")
+        for list in eval(a):
+            print(list)
