@@ -5,8 +5,7 @@ import re
 import datetime
 import shutil
 
-#dirs = "/mnt/archive/"
-dirs = "/home/fos/Dokumente/Computer/python/retention/testdir/"
+dirs = "/mnt/archive/"
 
 daysaweek = 3
 weekstokeep = 104
