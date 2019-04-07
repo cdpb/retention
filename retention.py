@@ -4,14 +4,18 @@ import os
 import re
 import datetime
 import shutil
+import time
 
 dirs = "/mnt/archive/"
 
 daysaweek = 3
 weekstokeep = 104
-daystokeep = 60
+daystokeep = 45
 monthlytokeep = 12
 yearlytokeep = 10
+
+dsuffix = "_DELETE"
+dload = 2
 
 
 def combinedirname(data):
@@ -40,7 +44,7 @@ def splitdirnames(data):
 def getdirnames():
     final = []
     for dir in os.listdir(dirs):
-        if re.search(r'^20..-..-..', dir):
+        if re.search(r'^20..-..-..$', dir):
             final.append(splitdirnames(dir))
     final.sort()
     final.reverse()
@@ -75,9 +79,27 @@ def getremoveddirnames(keep, data):
 def removedirnames(data):
     os.chdir(dirs)
     for dir in data:
+        ddir = dir + dsuffix
         # double check ...
         if os.path.isdir(dir):
-            shutil.rmtree(dir)
+            while True:
+                if os.getloadavg()[0] > dload:
+                    print(time.asctime())
+                    time.sleep(30)
+                else:
+                    break
+
+            print("move %s to %s" % (dir, ddir))
+            shutil.move(dir, ddir)
+            os.system("rm -vrf %s" % ddir)
+
+
+def removeolddir():
+    os.chdir(dirs)
+    for dir in os.listdir(dirs):
+        if re.search(r'^20..-..-..' + dsuffix + "$", dir):
+            print("Found old but not yet deleted dirs %s" % dir)
+            os.system("rm -vrf %s" % dir)
 
 
 def daily(data):
@@ -148,15 +170,14 @@ def yearly(data):
 
 data = getdirnames()
 keep = getkeepeddirnames(data)
+removeolddir()
 remove = getremoveddirnames(keep, data)
 removedirnames(remove)
 
-# be verbose on bigger actions
-if len(remove) >= 3:
-    for a in ("keep", "remove"):
-        eval(a).reverse()
-        print("")
-        print("Backups to %s - %i" % (a, len(eval(a))))
-        print("")
-        for list in eval(a):
-            print(list)
+for a in ("keep", "remove"):
+    eval(a).reverse()
+    print("")
+    print("Backups to %s - %i" % (a, len(eval(a))))
+    print("")
+    for list in eval(a):
+        print(list)
